@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#02072B">
+<title>ESTRELAS 2026.1 — REINVENT SAÚDE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ESTRELAS 2026.1 — REINVENT SAÚDE
+   Experiência de constelação cinematográfica
+   ============================================================ */
+:root{
+  --navy:#02072B; --navy2:#050B35; --royal:#071A75;
+  --electric:#003CFF; --neon:#008CFF; --cyan:#00D9FF;
+  --white:#FFFFFF; --lilac:#7C8FFF; --coral:#FF633F;
+  --world:2600px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:'Rajdhani','Segoe UI',sans-serif;
+  background:#02072B; color:#fff; overflow:hidden;
+  user-select:none; -webkit-user-select:none;
+  position:fixed; inset:0;
+}
+
+/* ---------- ATMOSFERA / GRADES ---------- */
+#grade{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 0%, rgba(2,7,43,.65) 100%);
+}
+#vignette{
+  position:fixed; inset:0; z-index:3; pointer-events:none;
+  box-shadow:inset 0 0 22vmin rgba(1,4,25,.9);
+}
+
+/* ---------- VÍDEO DE FUNDO ---------- */
+#videoBg{
+  position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;
+  opacity:.52; pointer-events:none; transform:translateZ(0);
+}
+#videoGrad{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:linear-gradient(180deg, rgba(2,7,43,.62) 0%, rgba(2,7,43,.1) 30%, rgba(2,7,43,.1) 68%, rgba(2,7,43,.62) 100%);
+}
+
+/* ---------- STARFIELDS (parallax) ---------- */
+.starfield{
+  position:fixed; inset:-4%; z-index:0; pointer-events:none;
+  background-repeat:repeat; will-change:transform; transform:translateZ(0);
+  transition:transform 2.6s cubic-bezier(.83,0,.17,1);
+}
+#starsFar{ opacity:.55; }
+#starsMid{ opacity:.7; }
+#starsNear{ opacity:.8; }
+
+/* ---------- WARP STREAKS ---------- */
+#streaks{
+  position:fixed; inset:-60%; z-index:2; pointer-events:none; opacity:0;
+  background:repeating-conic-gradient(from 0deg at 50% 50%,
+      rgba(0,217,255,.09) 0deg 2deg, transparent 2deg 18deg);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, black 0%, transparent 58%);
+  mask-image:radial-gradient(circle at 50% 50%, black 0%, transparent 58%);
+  transition:opacity .5s ease, transform 2.8s cubic-bezier(.17,.67,.4,1);
+  transform:scale(1) rotate(0deg) translateZ(0);
+  will-change:transform, opacity;
+}
+body.is-travelling #streaks{ opacity:.8; transform:scale(1.5) rotate(10deg); }
+
+/* ---------- FLASH ---------- */
+#flash{
+  position:fixed; inset:0; z-index:40; pointer-events:none; opacity:0;
+  background:radial-gradient(circle at 50% 50%, rgba(0,217,255,.95) 0%,
+     rgba(0,140,255,.35) 35%, transparent 70%);
+}
+#flash.burst{ animation:flashBurst .8s ease-out forwards; }
+@keyframes flashBurst{
+  0%{opacity:0;} 40%{opacity:.85;} 100%{opacity:0;}
+}
+
+/* ---------- MUNDO (constelação) ---------- */
+#stage{position:fixed; inset:0; z-index:4; overflow:hidden;}
+#world{
+  position:absolute; top:0; left:0; width:var(--world); height:var(--world);
+  transform-origin:0 0; will-change:transform;
+  transition:transform 2.8s cubic-bezier(.83,0,.17,1);
+}
+#world.out{ transition-duration:1.9s; }
+
+#worldSphere{
+  position:absolute; left:50%; top:50%; width:2150px; height:2150px;
+  margin:-1075px 0 0 -1075px; border-radius:50%;
+  border:1px solid rgba(0,140,255,.12);
+  background:radial-gradient(circle, rgba(0,60,255,.05), transparent 72%);
+}
+#worldOrbit{ position:absolute; left:50%; top:50%; width:1720px; height:1720px; margin:-860px 0 0 -860px; border-radius:50%; border:1px dashed rgba(0,140,255,.1); }
+#worldLines{ position:absolute; top:0; left:0; width:var(--world); height:var(--world); }
+
+.starNode{
+  position:absolute; width:30px; height:30px; border-radius:50%;
+  background:radial-gradient(circle, #fff 0%, rgba(0,217,255,.9) 30%, transparent 72%);
+  animation:nodePulse 5s ease-in-out infinite;
+  transition:opacity .8s ease;
+  will-change:opacity, transform;
+}
+.starNode::before{
+  content:''; position:absolute; inset:-70%; border-radius:50%;
+  background:radial-gradient(circle, rgba(0,217,255,.22), transparent 64%);
+  opacity:.5; transition:opacity .8s ease;
+}
+@keyframes nodePulse{
+  0%,100%{opacity:.55; transform:scale(1);}
+  50%{opacity:.8; transform:scale(1.15);}
+}
+@media (prefers-reduced-motion: reduce){
+  .starNode{animation:none;}
+}
+.starNode.active::before{ opacity:1; background:radial-gradient(circle, rgba(0,217,255,.42), transparent 58%); }
+.starNode.active{ opacity:1; animation:nodePulseActive 1.4s ease-in-out infinite; }
+@keyframes nodePulseActive{
+  0%,100%{opacity:.9; transform:scale(1);}
+  50%{opacity:1; transform:scale(1.5);}
+}
+.starNode.lit{
+  opacity:1;
+  background:radial-gradient(circle, #fff 0%, rgba(0,217,255,1) 25%, rgba(255,99,63,.5) 45%, transparent 75%);
+  animation-duration:4s;
+}
+.starNode.lit::before{
+  opacity:1; background:radial-gradient(circle, rgba(0,217,255,.5), rgba(255,99,63,.14) 42%, transparent 68%);
+}
+.starNode.lit.master::before{
+  background:radial-gradient(circle, rgba(0,217,255,.65), rgba(255,99,63,.24) 38%, transparent 70%);
+}
+
+/* ---------- TELA DE ABERTURA ---------- */
+#titleScreen{
+  position:fixed; inset:0; z-index:30; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center;
+  overflow:hidden;
+  transition:opacity 1.4s ease, transform 2.2s ease;
+}
+#titleScreen.hide{opacity:0; transform:scale(1.12); pointer-events:none;}
+#videoIntro{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;
+  pointer-events:none;
+}
+#introGrad{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%, transparent 42%, rgba(2,7,43,.55) 100%),
+             linear-gradient(180deg, rgba(2,7,43,.55), transparent 35%, transparent 65%, rgba(2,7,43,.6));
+}
+.t-brand,.t-rule,.t-title,.t-sub,.t-hint{ position:relative; z-index:2; }
+.t-brand{
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(1.6rem,5.2vw,4rem); letter-spacing:.22em; color:#fff;
+  text-shadow:0 0 35px rgba(0,140,255,.7);
+}
+.t-brand .blu{ background:linear-gradient(90deg,#00D9FF,#008CFF); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.t-rule{ width:min(320px,52vw); height:2px; margin:26px auto; background:linear-gradient(90deg,transparent,rgba(0,217,255,.8),transparent); box-shadow:0 0 14px rgba(0,217,255,.7); }
+.t-title{
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(1.5rem,4.6vw,3.4rem); letter-spacing:.32em; color:#fff;
+  text-shadow:0 0 25px rgba(0,217,255,.5);
+}
+.t-title span{ color:var(--coral); text-shadow:0 0 18px rgba(255,99,63,.8); }
+.t-sub{ margin-top:22px; font-size:clamp(.9rem,1.8vw,1.25rem); letter-spacing:.28em; color:var(--lilac); }
+.t-hint{ position:absolute; bottom:6vh; left:0; right:0; text-align:center; font-size:clamp(.72rem,1.4vw,1rem); letter-spacing:.22em; color:rgba(124,143,255,.65); animation:blinkHint 2.4s ease-in-out infinite; }
+@keyframes blinkHint{0%,100%{opacity:.4;}50%{opacity:1;}}
+
+/* ---------- INTRO CONSTELAÇÃO ---------- */
+#constellationIntro{
+  position:fixed; inset:0; z-index:31; display:flex; align-items:center;
+  justify-content:center; flex-direction:column; text-align:center;
+  opacity:0; visibility:hidden; transition:opacity 1s ease; pointer-events:none;
+}
+#constellationIntro.show{opacity:1; visibility:visible;}
+.c-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2rem,6vw,4.6rem);letter-spacing:.2em;color:#fff;text-shadow:0 0 40px rgba(0,217,255,.6);}
+.c-title b{color:var(--cyan);text-shadow:0 0 30px rgba(0,217,255,.9);}
+.c-rule{width:min(220px,46vw);height:2px;margin:22px auto;background:linear-gradient(90deg,transparent,rgba(0,217,255,.85),transparent);box-shadow:0 0 14px rgba(0,217,255,.6);}
+.c-sub{margin-top:6px;font-size:clamp(1rem,2.4vw,1.9rem);letter-spacing:.3em;color:var(--lilac);}
+.constellation-panel{
+  padding:clamp(26px,5vh,48px) clamp(30px,6vw,90px);
+  border-radius:26px;
+  background:rgba(2,7,43,.78);
+  border:1px solid rgba(0,140,255,.45);
+  box-shadow:0 0 60px rgba(0,60,255,.35), 0 30px 80px rgba(0,5,30,.6), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  transform:scale(.95); transition:transform 1s cubic-bezier(.2,.8,.2,1);
+  position:relative;
+}
+#constellationIntro.show .constellation-panel{transform:scale(1);}
+.constellation-panel::before{
+  content:''; position:absolute; top:0; left:18%; right:18%; height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  box-shadow:0 0 12px rgba(0,217,255,.8); border-radius:2px;
+}
+.constellation-panel::after{
+  content:''; position:absolute; bottom:-40px; left:50%; transform:translateX(-50%);
+  width:220px; height:90px; background:radial-gradient(ellipse, rgba(0,140,255,.25), transparent 70%);
+  pointer-events:none;
+}
+
+/* ---------- REVELAÇÃO ---------- */
+#reveal{
+  position:fixed; inset:0; z-index:50; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center;
+  opacity:0; visibility:hidden; transition:opacity .7s ease;
+  background:radial-gradient(circle at 50% 45%, rgba(0,140,255,.22) 0%, rgba(2,7,43,.82) 55%, rgba(2,7,43,.97) 100%);
+}
+#reveal.show{opacity:1; visibility:visible;}
+#revealGlow{
+  position:absolute; top:42%; left:50%; width:60vmin; height:60vmin;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(0,217,255,.5) 0%, rgba(0,140,255,.18) 40%, transparent 70%);
+  animation:glowBreath 4s ease-in-out infinite;
+}
+@keyframes glowBreath{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.75;}50%{transform:translate(-50%,-50%) scale(1.15);opacity:1;}}
+
+#revealTag{
+  opacity:0; transform:translateY(14px); transition:all .8s ease .2s;
+  font-family:'Orbitron',sans-serif; font-size:clamp(.7rem,1.6vw,1rem);
+  letter-spacing:.5em; color:var(--cyan); text-shadow:0 0 12px rgba(0,217,255,.7);
+  margin-bottom:3.5vh;
+}
+#reveal.show #revealTag{opacity:1; transform:translateY(0);}
+
+#photoFrame{
+  width:min(42vmin,58vh,340px); height:min(42vmin,58vh,340px); border-radius:50%;
+  position:relative; flex-shrink:0;
+  border:3px solid rgba(0,217,255,.85);
+  box-shadow:0 0 45px rgba(0,217,255,.45), 0 0 120px rgba(0,140,255,.35), inset 0 0 60px rgba(0,217,255,.15);
+  opacity:0; transform:scale(.6); transition:all 1s ease .5s;
+  background:radial-gradient(circle, rgba(0,140,255,.2), rgba(2,7,43,.9));
+}
+#reveal.show #photoFrame{opacity:1; transform:scale(1);}
+#photoFrame::after{
+  content:''; position:absolute; inset:-14px; border-radius:50%;
+  border:1px dashed rgba(0,217,255,.4); animation:frameSpin 18s linear infinite; pointer-events:none;
+}
+@keyframes frameSpin{to{transform:rotate(360deg);}}
+#photoFrame img,#photoFallback{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  border-radius:50%; overflow:hidden;
+  opacity:0; transition:opacity 1s ease;
+}
+#photoFrame img.loaded,#photoFallback.ready{opacity:1;}
+#photoFallback{
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle, rgba(7,26,117,.9), rgba(2,7,43,1));
+  font-family:'Orbitron',sans-serif; font-weight:700; color:var(--cyan);
+  font-size:clamp(1.8rem,4vw,3rem); letter-spacing:.1em;
+  text-shadow:0 0 20px rgba(0,217,255,.6);
+}
+
+#revealName{
+  font-family:'Orbitron',sans-serif; font-weight:900; letter-spacing:.06em;
+  font-size:clamp(1.15rem,3.4vh,2.4rem); color:#fff; line-height:1.25;
+  margin-top:4.5vh; padding:0 6vw;
+  text-shadow:0 0 28px rgba(0,140,255,.8);
+  opacity:0; transform:translateY(24px); transition:all 1s ease;
+}
+#reveal.show #revealName{opacity:1; transform:translateY(0); transition-delay:1.3s;}
+
+#revealStarsRow{
+  margin-top:2.2vh; font-size:clamp(2.2rem,6vh,4rem); letter-spacing:.28em;
+  opacity:0; transform:translateY(14px); transition:all 1s ease;
+  color:var(--cyan); text-shadow:0 0 14px rgba(0,217,255,.8);
+}
+#reveal.show #revealStarsRow{opacity:1; transform:translateY(0); transition-delay:1.8s;}
+#revealStarsRow .off{color:rgba(124,143,255,.35); text-shadow:none;}
+
+#revealLabel{
+  margin-top:2vh; font-family:'Orbitron',sans-serif; font-size:clamp(.6rem,1.4vw,.85rem);
+  letter-spacing:.45em; color:var(--lilac);
+  opacity:0; transition:opacity 1s ease;
+}
+#reveal.show #revealLabel{opacity:1; transition-delay:2.2s;}
+#revealLabel .spark{color:var(--coral); text-shadow:0 0 10px rgba(255,99,63,.8);}
+
+#reveal.instant #photoFrame,
+#reveal.instant #revealName,
+#reveal.instant #revealStarsRow,
+#reveal.instant #revealLabel{
+  transition-duration:.35s!important;
+  transition-delay:0s!important;
+}
+
+/* ---------- TELA FINAL ---------- */
+#finalScreen{
+  position:fixed; inset:0; z-index:51; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center;
+  opacity:0; visibility:hidden; transition:opacity 2s ease;
+  background:radial-gradient(ellipse at 50% 50%, rgba(5,11,53,.55) 0%, rgba(2,7,43,.88) 80%);
+}
+#finalScreen.show{opacity:1; visibility:visible;}
+.f-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.8rem,5.6vw,4.4rem);letter-spacing:.18em;color:#fff;text-shadow:0 0 45px rgba(0,217,255,.65);}
+.f-title b{color:var(--cyan);}
+.f-sub{margin-top:18px;font-size:clamp(1rem,2.2vw,1.8rem);letter-spacing:.3em;color:var(--lilac);}
+.f-rule{width:min(360px,55vw);height:2px;margin:34px auto;background:linear-gradient(90deg,transparent,rgba(0,217,255,.8),transparent);box-shadow:0 0 16px rgba(0,217,255,.6);}
+.f-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.6rem,5.2vw,4rem);letter-spacing:.24em;color:#fff;text-shadow:0 0 30px rgba(0,140,255,.7);}
+.f-brand .blu{background:linear-gradient(90deg,#00D9FF,#008CFF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.f-tag{margin-top:14px;font-size:clamp(.8rem,1.6vw,1.1rem);letter-spacing:.3em;color:var(--lilac);}
+.f-tag .spark{color:var(--coral);text-shadow:0 0 12px rgba(255,99,63,.8);}
+.f-hint{position:absolute;bottom:6vh;left:0;right:0;font-size:.75rem;letter-spacing:.25em;color:rgba(124,143,255,.5);}
+
+/* ---------- UI ---------- */
+#progress{
+  position:fixed; right:3vw; bottom:3vh; z-index:70; font-family:'Orbitron',sans-serif;
+  font-size:.85rem; letter-spacing:.3em; color:var(--cyan); text-shadow:0 0 10px rgba(0,217,255,.6);
+  opacity:0; transition:opacity .6s ease; pointer-events:none;
+}
+#progress.show{opacity:.85;}
+#fsBtn{
+  position:fixed; top:2.5vh; right:2.5vw; z-index:90;
+  width:44px; height:44px; border-radius:50%; cursor:pointer;
+  background:rgba(5,11,53,.7); border:1px solid rgba(0,140,255,.5); color:var(--cyan);
+  font-size:1.1rem; display:flex; align-items:center; justify-content:center;
+  transition:all .3s ease; opacity:.55;
+}
+#fsBtn:hover{opacity:1; box-shadow:0 0 20px rgba(0,217,255,.5);}
+@media (max-width:768px){#fsBtn{display:none;}}
+#autoBadge{
+  position:fixed; bottom:11vh; left:50%; transform:translateX(-50%); z-index:70;
+  font-family:'Orbitron',sans-serif; font-size:.7rem; letter-spacing:.3em;
+  color:var(--coral); opacity:0; transition:opacity .4s ease; pointer-events:none;
+  text-shadow:0 0 10px rgba(255,99,63,.6);
+}
+#autoBadge.show{opacity:.9;}
+
+/* ---------- NAVEGAÇÃO (RODAPÉ) ---------- */
+#navBar{
+  position:fixed; bottom:2.5vh; left:50%; transform:translateX(-50%); z-index:80;
+  display:flex; align-items:center; gap:8px; padding:7px 12px;
+  background:rgba(5,11,53,.72); border:1px solid rgba(0,140,255,.4);
+  border-radius:30px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  opacity:.45; transition:opacity .3s ease;
+}
+#navBar:hover{opacity:1;}
+.navBtn{
+  width:34px; height:34px; border-radius:50%; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,60,255,.18); border:1px solid rgba(0,140,255,.55);
+  color:var(--cyan); font-size:.85rem; line-height:1;
+  transition:all .25s ease; outline:none;
+}
+.navBtn:hover{background:rgba(0,140,255,.4); box-shadow:0 0 16px rgba(0,217,255,.55); color:#fff;}
+.navBtn:active{transform:scale(.92);}
+.navBtn.home{ color:var(--coral); border-color:rgba(255,99,63,.5); }
+.navBtn.home:hover{ background:rgba(255,99,63,.25); box-shadow:0 0 16px rgba(255,99,63,.5); color:#fff; }
+.navBtn.music{ font-size:.95rem; }
+.navBtn.music:hover{ background:rgba(0,217,255,.15); box-shadow:0 0 16px rgba(0,217,255,.5); }
+@media (max-width:768px){
+  #navBar{opacity:.9; gap:12px; padding:9px 14px;}
+  .navBtn{width:44px; height:44px; font-size:1rem;}
+}
+
+#loader{
+  position:fixed; inset:0; z-index:99; display:flex; align-items:center;
+  justify-content:center; flex-direction:column; gap:18px;
+  background:radial-gradient(ellipse at 50% 50%, #050B35, #02072B);
+  transition:opacity .8s ease;
+}
+#loader .ring{
+  width:56px; height:56px; border-radius:50%;
+  border:2px solid rgba(0,140,255,.2); border-top-color:var(--cyan);
+  animation:spin 1s linear infinite; box-shadow:0 0 25px rgba(0,217,255,.25);
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loader.hide{opacity:0; pointer-events:none;}
+#loaderLabel{font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:.4em;color:var(--lilac);}
+
+.note{pointer-events:none;}
+</style>
+</head>
+<body>
+
+<video id="videoBg" autoplay muted loop playsinline preload="auto"></video>
+<div id="videoGrad"></div>
+<audio id="bgMusic" loop preload="auto"></audio>
+<div class="starfield" id="starsFar"></div>
+<div class="starfield" id="starsMid"></div>
+<div class="starfield" id="starsNear"></div>
+<div id="streaks"></div>
+
+<div id="stage">
+  <div id="world">
+    <div id="worldSphere"></div>
+    <div id="worldOrbit"></div>
+    <svg id="worldLines" viewBox="0 0 2600 2600" preserveAspectRatio="none"></svg>
+  </div>
+</div>
+
+<div id="flash"></div>
+<div id="grade"></div>
+<div id="vignette"></div>
+
+<!-- ABERTURA -->
+<div id="titleScreen">
+  <video id="videoIntro" muted loop playsinline preload="auto"></video>
+  <div id="introGrad"></div>
+  <div class="t-brand">REINVENT <span class="blu">SAÚDE</span></div>
+  <div class="t-rule"></div>
+  <div class="t-title">ESTRELAS <span>2026.1</span></div>
+  <div class="t-sub">22 PESSOAS · UMA SÓ ENERGIA</div>
+  <div class="t-hint">CLIQUE OU TECLE ESPAÇO PARA COMEÇAR · F = TELA CHEIA</div>
+</div>
+
+<!-- INTRO CONSTELAÇÃO -->
+<div id="constellationIntro">
+  <div class="constellation-panel">
+    <div class="c-title">22 <b>ESTRELAS</b></div>
+    <div class="c-rule"></div>
+    <div class="c-sub">UMA HISTÓRIA.</div>
+  </div>
+</div>
+
+<!-- REVELAÇÃO -->
+<div id="reveal">
+  <div id="revealGlow"></div>
+  <div id="revealTag">ESTRELA 00 / 22</div>
+  <div id="photoFrame">
+    <div id="photoFallback"></div>
+    <img id="photoImg" alt="">
+  </div>
+  <div id="revealName"></div>
+  <div id="revealStarsRow"></div>
+  <div id="revealLabel">ESTRELA 2026.1 <span class="spark">✦</span> REINVENT SAÚDE</div>
+</div>
+
+<!-- FINAL -->
+<div id="finalScreen">
+  <div class="f-brand">REINVENT <span class="blu">SAÚDE</span></div>
+  <div class="f-rule"></div>
+  <div class="f-title">22 <b>ESTRELAS</b></div>
+  <div class="f-sub">UMA CONSTELAÇÃO.</div>
+  <div class="f-tag">ESTRELAS 2026.1 · <span class="spark">ENERGIA QUE VIRA RESULTADO</span></div>
+  <div class="f-hint">CLIQUE PARA REINICIAR</div>
+</div>
+
+<div id="progress">01 / 22</div>
+<div id="autoBadge">AUTO</div>
+<button id="fsBtn" title="Tela cheia (F)">⛶</button>
+
+<div id="navBar">
+  <button class="navBtn music" id="navMusic" title="Música" aria-label="Música">🔊</button>
+  <button class="navBtn home" id="navHome" title="Início" aria-label="Início">⟲</button>
+  <button class="navBtn" id="navBack" title="Voltar" aria-label="Voltar">◀</button>
+  <button class="navBtn" id="navNext" title="Avançar" aria-label="Avançar">▶</button>
+</div>
+
+<div id="loader"><div class="ring"></div><div id="loaderLabel">PREPARANDO O UNIVERSO…</div></div>
+
+<script>
+/* ============================================================
+   CONFIGURAÇÃO — EDITE AQUI
+   ------------------------------------------------------------
+   · FOTOS: coloque dentro da pasta "FOTOS/" no GitHub
+     com o NOME COMPLETO da pessoa, sem "_" (EX: ANA CAROLINA SILVA COSTA.jpg)
+   · Aceita .jpg ou .png (também aceito versão com "_" como fallback)
+   · Sem foto, aparece um placeholder com iniciais.
+   · Para usar caminho/arquivo diferente, adicione  img:'NOME.ARQUIVO'
+     no cadastro da pessoa.
+   · Ordem da lista abaixo = ordem da revelação (do 1★ ao 5★ como final).
+   ============================================================ */
+const FOTOS_DIR = 'FOTOS/';
+
+/* ------------------------------------------------------------
+   VÍDEO DE FUNDO (opcional)
+   Coloque o vídeo do evento na pasta "video/" do GitHub
+   e informe o nome abaixo. Ajuste a opacidade em #videoBg (CSS).
+   Se o arquivo não existir, a apresentação segue normalmente.
+   ------------------------------------------------------------ */
+const VIDEO_SRC = 'video/evento.mp4';
+const VIDEO_INTRO_SRC = 'video/video2.mp4';
+
+/* ------------------------------------------------------------
+   MÚSICA / TRILHA SONORA (opcional)
+   Coloque o arquivo na pasta "audio/" do GitHub (EX: trilha.mp3)
+   A música começa no primeiro clique (navegador bloqueia autoplay
+   com som). Estilo "conquista": procure trilhas epicas/corporativas
+   royalty-free em sites como Pixabay Music ou YouTube Audio Library.
+   Se vazio, o botão de música some e não há trilha.
+   ------------------------------------------------------------ */
+const AUDIO_SRC = 'audio/trilha.mp3';
+
+const STARS = [
+  { name:"ANA CAROLINA SILVA COSTA", stars:1 },
+  { name:"ANA CAROLINE VIEIRA FELIX", stars:1 },
+  { name:"ANA KAROLINY BORGES GOMES", stars:1 },
+  { name:"ANDREA HELLEN DE MORAIS BATISTA", stars:1 },
+  { name:"ARTHUR EMERSON COSTA SAMPAIO", stars:1 },
+  { name:"CHARLES DE OLIVEIRA SOUZA", stars:1 },
+  { name:"DARLISON ALVES MELO DE OLIVEIRA", stars:1 },
+  { name:"GABRIEL GOMES LINO", stars:1 },
+  { name:"GABRIEL PESSOA DE MESQUITA", stars:1 },
+  { name:"GISELLY DE SOUZA CARNEIRO NASCIMENTO", stars:1 },
+  { name:"LUANA RODRIGUES DE OLIVEIRA", stars:1 },
+  { name:"MIRIAM DA SILVA MARTINS", stars:1 },
+  { name:"EMILIENE MIRANDA DA SILVA LIMA", stars:2 },
+  { name:"ERIC LEVI ALVES ROCHA", stars:2 },
+  { name:"ALESSANDRA MARA FALCAO DA SILVA", stars:3 },
+  { name:"ERBENIA ALVES ARAUJO", stars:3 },
+  { name:"JOKEBEDYA DE SOUZA VIEIRA", stars:3 },
+  { name:"MARIA GLAUCIANE SILVA DE ALENCAR", stars:3 },
+  { name:"FRANCISCO REGIS ARAUJO", stars:4 },
+  { name:"ANDERSON DA SILVA RIBEIRO", stars:5 },
+  { name:"IAN ALVES FERREIRA", stars:5 },
+  { name:"MONICA RODRIGUES DOS SANTOS", stars:5 }
+];
+
+/* ============================================================
+   PARA USAR A FOTO FORA DA PASTA PADRÃO, USE img:'...'  POR EXEMPLO:
+   { name:"FRANCISCO REGIS ARAUJO", stars:4, img:"FOTOS/regis.png" }
+   ============================================================ */
+
+/* ================= MECÂNICA ================= */
+const N = STARS.length;
+const WORLD = 2600;
+const CENTER = WORLD / 2;
+const state = { phase:'boot', idx:0, auto:false, lit:[], timeouts:[] };
+
+const $ = id => document.getElementById(id);
+const body = document.body;
+const world = $('world');
+const svgLines = $('worldLines');
+const revealEl = $('reveal');
+const fsBtn = $('fsBtn');
+
+let viewW = innerWidth, viewH = innerHeight;
+let sBase = 1, sZoom = 1;
+
+function resize(){
+  viewW = innerWidth; viewH = innerHeight;
+  const needed = 2400;
+  sBase = Math.min(viewW * 0.95, viewH * 0.85) / needed;
+  sZoom = Math.max(sBase * 7, 2.8);
+  universeView();
+}
+addEventListener('resize', resize);
+
+function clearTimers(){ state.timeouts.forEach(clearTimeout); state.timeouts = []; }
+function schedule(fn, ms){ state.timeouts.push(setTimeout(fn, ms)); }
+
+/* Transform: world point (px,py) centralizado em (cx,cy) na tela, com offset */
+function viewTransform(s, px, py, cx, cy, ox=0, oy=0){
+  const tx = cx - px*s + ox, ty = cy - py*s + oy;
+  return `translate(${tx}px, ${ty}px) scale(${s})`;
+}
+function universeView(){
+  world.style.transform = viewTransform(sBase, CENTER, CENTER, viewW/2, viewH/2);
+}
+function starView(i){
+  const p = nodes[i];
+  world.style.transform = viewTransform(sZoom, p.x, p.y, viewW/2, viewH/2);
+}
+
+/* ---------- POSIÇÕES DAS 22 ESTRELAS (espiral dourada) ---------- */
+function mulberry(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; const t=Math.imul(a^a>>>15,1|a); a=t+t+0x5A6F4B18|0; return a>>>0; }; }
+const rng = mulberry(20261);
+const nodes = STARS.map((s,i)=>{
+  const t = i * 2.3999632;
+  const rad = Math.sqrt((i + 0.5) / N) * 1080;
+  const jx = (rng()/4294967296 - .5) * 90;
+  const jy = (rng()/4294967296 - .5) * 90;
+  return { x: Math.round(CENTER + Math.cos(t)*rad + jx), y: Math.round(CENTER + Math.sin(t)*rad + jy) };
+});
+
+/* ---------- CRIA NÓS ---------- */
+(function buildNodes(){
+  nodes.forEach((p,i)=>{
+    const el = document.createElement('div');
+    el.className = 'starNode';
+    el.style.left = (p.x - 15) + 'px';
+    el.style.top  = (p.y - 15) + 'px';
+    world.appendChild(el);
+  });
+})();
+
+/* ---------- LINHAS ---------- */
+function setLines(pairs){
+  let html = '';
+  (pairs||[]).forEach(([a,b])=>{
+    html += `<line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}" stroke="rgba(0,60,255,.16)" stroke-width="9" stroke-linecap="round"></line>`;
+    html += `<line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}" stroke="rgba(0,217,255,.5)" stroke-width="1.6" stroke-dasharray="5 9" stroke-linecap="round"></line>`;
+  });
+  svgLines.innerHTML = html;
+}
+function pathLines(){
+  const pairs = [];
+  for(let k=0;k<state.lit.length-1;k++) pairs.push([state.lit[k], state.lit[k+1]]);
+  return pairs;
+}
+function addLitLine(){
+  const n = state.lit.length;
+  if(n>=2) setLines(pathLines());
+}
+function fullWeb(){
+  const pairs = pathLines();
+  for(let i=0;i<N;i++){ const j=(i+1)%N; if(!pairs.some(p=>(p[0]===i&&p[1]===j)||(p[0]===j&&p[1]===i))) pairs.push([i,j]); }
+  setLines(pairs);
+}
+
+/* ---------- NÓS VISUAIS ---------- */
+function nodeEl(i){ return world.children[3 + i]; } /* filamenta: sphere, orbit, svg, nós */
+function setActive(i){
+  for(let k=0;k<N;k++) nodeEl(k).classList.remove('active');
+  if(i!=null) nodeEl(i).classList.add('active');
+}
+function lightStar(i){
+  if(state.lit.includes(i)) return;
+  state.lit.push(i);
+  nodeEl(i).classList.add('lit');
+}
+function lightAll(){
+  STARS.forEach((s,i)=>nodeEl(i).classList.add('lit'));
+}
+
+/* ---------- AUXILIARES DE NOME / FOTO ---------- */
+function normName(n){
+  return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase()
+         .replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');
+}
+function titleCase(n){
+  return n.toLowerCase().split(' ').map(w=>w?w.charAt(0).toUpperCase()+w.slice(1):w).join(' ');
+}
+function initials(n){
+  return n.split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w.charAt(0)).join('').toUpperCase() || n.charAt(0).toUpperCase();
+}
+function starHTML(count){
+  let h='';
+  for(let i=1;i<=5;i++) h += i<=count ? '★' : '<span class="off">☆</span>';
+  return h;
+}
+function buildReveal(i){
+  const s = STARS[i];
+  const img = $('photoImg'), fb = $('photoFallback');
+  $('revealTag').textContent = `ESTRELA ${String(i+1).padStart(2,'0')} / ${N}`;
+  $('revealName').textContent = titleCase(s.name);
+  $('revealStarsRow').innerHTML = starHTML(s.stars);
+  $('progress').textContent = `${String(i+1).padStart(2,'0')} / ${N}`;
+
+  fb.style.display = 'none';
+  img.style.display = 'none';
+  img.classList.remove('loaded');
+
+  const opts = s.img ? [s.img] : [
+    FOTOS_DIR + s.name + '.jpg',
+    FOTOS_DIR + s.name + '.png',
+    FOTOS_DIR + normName(s.name) + '.jpg',
+    FOTOS_DIR + normName(s.name) + '.png'
+  ];
+  let k = 0;
+  (function load(){
+    const src = opts[k++];
+    if(!src){ fb.textContent = initials(s.name); fb.classList.add('ready'); fb.style.display='flex'; return; }
+    img.onload = function(){ fb.style.display='none'; img.style.display='block'; img.classList.add('loaded'); };
+    img.onerror = load;
+    img.src = src;
+  })();
+}
+
+/* ---------- ESTADO VISUAL DA TELA ---------- */
+function showReveal(){
+  body.classList.remove('is-travelling');
+  flashBurst();
+  revealEl.classList.add('show');
+}
+function flashBurst(){
+  const f = $('flash');
+  f.classList.remove('burst'); void f.offsetWidth; f.classList.add('burst');
+}
+
+/* ---------- MOTOR DA VIAGEM ---------- */
+function startTravel(i){
+  clearTimers();
+  state.idx = i; state.phase = 'travel';
+  $('constellationIntro').classList.remove('show');
+  revealEl.classList.remove('show');
+  body.classList.remove('is-travelling');
+  world.classList.remove('out');
+  setActive(i);
+  buildReveal(i);
+
+  schedule(()=>{
+    body.classList.add('is-travelling');
+    starView(i);
+  }, 120);
+
+  schedule(()=>{ snapReveal(); }, 3000);
+}
+
+function snapReveal(){
+  clearTimers();
+  state.phase = 'reveal';
+  body.classList.remove('is-travelling');
+  setActive(state.idx);
+  showReveal();
+  if(state.auto) schedule(()=>completeStar(), 8200);
+}
+
+function completeStar(){
+  clearTimers();
+  if(state.phase!=='reveal') return;
+  lightStar(state.idx);
+  addLitLine();
+  setActive(null);
+  revealEl.classList.remove('show');
+  revealEl.classList.add('instant');
+
+  schedule(()=>{
+    revealEl.classList.remove('instant');
+    state.phase = 'out';
+    world.classList.add('out');
+    universeView();
+    if(state.idx >= N-1){
+      schedule(()=>finalAct(), 1900);
+    } else {
+      schedule(()=>startTravel(state.idx + 1), 1500);
+    }
+  }, 180);
+}
+
+function finalAct(){
+  state.phase = 'final';
+  lightAll();
+  STARS.forEach((s,i)=>{ if(s.stars===5) nodeEl(i).classList.add('master'); });
+  fullWeb();
+  setActive(null);
+  schedule(()=>{ $('finalScreen').classList.add('show'); }, 1600);
+  $('progress').classList.remove('show');
+}
+
+/* ---------- ABERTURA ---------- */
+function showConstellation(){
+  state.phase = 'constellation';
+  $('titleScreen').classList.add('hide');
+  pauseIntroVideo();
+  $('constellationIntro').classList.add('show');
+  $('progress').classList.add('show');
+  schedule(()=>{ $('constellationIntro').classList.remove('show'); }, 4400);
+}
+
+/* ---------- NAVEGAÇÃO ---------- */
+function advance(){
+  switch(state.phase){
+    case 'boot':
+    case 'title':
+      showConstellation();
+      if(state.auto) schedule(()=>startTravel(0), 5200);
+      break;
+    case 'constellation':
+      startTravel(state.idx);
+      break;
+    case 'travel':
+      snapReveal();
+      break;
+    case 'reveal':
+      completeStar();
+      break;
+    case 'out':
+      clearTimers();
+      if(state.idx >= N-1){ finalAct(); }
+      else { startTravel(state.idx + 1); }
+      break;
+    case 'final':
+      location.reload();
+      break;
+  }
+}
+function back(){
+  switch(state.phase){
+    case 'travel': case 'out':
+      clearTimers(); setActive(null); revealEl.classList.remove('show');
+      state.phase='constellation'; world.classList.add('out'); universeView();
+      break;
+    case 'reveal':
+      if(state.idx>0){
+        clearTimers(); state.idx--; setActive(state.idx); buildReveal(state.idx);
+        body.classList.remove('is-travelling'); showReveal();
+      } else {
+        clearTimers(); revealEl.classList.remove('show'); setActive(null);
+        state.phase='constellation'; world.classList.add('out'); universeView();
+      }
+      break;
+    case 'constellation':
+      clearTimers(); $('constellationIntro').classList.remove('show');
+      $('titleScreen').classList.remove('hide'); $('progress').classList.remove('show');
+      state.phase='title'; resumeIntroVideo();
+      break;
+  }
+}
+
+/* ---------- FULLSCREEN ---------- */
+fsBtn.addEventListener('click', toggleFS);
+function toggleFS(){
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen?.();
+}
+
+/* ---------- NAVEGAÇÃO RODAPÉ ---------- */
+function goHome(){
+  clearTimers();
+  state.idx = 0; state.phase = 'title'; state.auto = false;
+  $('autoBadge').classList.remove('show');
+  revealEl.classList.remove('show');
+  $('finalScreen').classList.remove('show');
+  $('constellationIntro').classList.remove('show');
+  $('titleScreen').classList.remove('hide');
+  $('progress').classList.remove('show');
+  resumeIntroVideo();
+  setActive(null);
+  world.classList.add('out');
+  universeView();
+  state.lit = [];
+  setLines([]);
+  for(let k=0;k<N;k++) nodeEl(k).classList.remove('lit','master');
+}
+$('navHome').addEventListener('click', goHome);
+$('navBack').addEventListener('click', back);
+$('navNext').addEventListener('click', advance);
+
+/* ---------- MÚSICA ---------- */
+const audio = $('bgMusic');
+const musicBtn = $('navMusic');
+(function initMusic(){
+  if(!AUDIO_SRC){ musicBtn.style.display = 'none'; return; }
+  audio.src = AUDIO_SRC;
+  audio.volume = .75;
+})();
+function syncMusicIcon(){ musicBtn.textContent = audio.paused ? '🔊' : '🔇'; }
+audio.addEventListener('play', syncMusicIcon);
+audio.addEventListener('pause', syncMusicIcon);
+
+let musicToggled = false;
+function playMusic(){
+  const p = audio.play();
+  if(p && p.catch) p.catch(()=>{});
+}
+function tryStartMusic(){
+  if(musicToggled || !AUDIO_SRC || audio.src === '' || audio.paused === false) return;
+  playMusic();
+}
+musicBtn.addEventListener('click', e=>{
+  musicToggled = true;
+  if(audio.paused){ playMusic(); }
+  else { audio.pause(); }
+});
+
+/* ---------- AUTO ---------- */
+function toggleAuto(){
+  state.auto = !state.auto;
+  $('autoBadge').classList.toggle('show', state.auto);
+}
+
+/* ---------- CONTROLES ---------- */
+addEventListener('click', e=>{
+  if(e.target.closest('#fsBtn') || e.target.closest('#navBar')) return;
+  tryStartMusic();
+  advance();
+});
+addEventListener('keydown', e=>{
+  const k = e.key.toLowerCase();
+  if(k===' ' || k==='enter' || k==='arrowright' || k==='arrowup'){ e.preventDefault(); tryStartMusic(); advance(); }
+  else if(k==='arrowleft' || k==='arrowdown'){ e.preventDefault(); back(); }
+  else if(k==='escape'){ if(document.fullscreenElement) document.exitFullscreen(); }
+  else if(k==='f'){ toggleFS(); }
+  else if(k==='a'){ toggleAuto(); }
+});
+
+/* touch: swipe left = avançar, swipe right = voltar */
+let tx0=0, ty0=0;
+addEventListener('touchstart', e=>{ tx0=e.touches[0].clientX; ty0=e.touches[0].clientY; }, {passive:true});
+addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - tx0;
+  const dy = e.changedTouches[0].clientY - ty0;
+  if(Math.abs(dx)>60 && Math.abs(dy)<70){ dx<0 ? advance() : back(); }
+}, {passive:true});
+
+/* evita double-tap zoom */
+addEventListener('dblclick', e=>e.preventDefault());
+
+/* ---------- STARFIELDS EXTRA (tile de partículas) ---------- */
+function makeStarTile(){
+  const c = document.createElement('canvas');
+  c.width = 260; c.height = 260;
+  const g = c.getContext('2d');
+  const colors = ['0,217,255','140,170,255','255,255,255','0,140,255'];
+  for(let i=0;i<150;i++){
+    const x = Math.random()*260, y = Math.random()*260;
+    const r = Math.random()*1.5 + .3;
+    const a = (Math.random()*.35 + .18).toFixed(2);
+    g.beginPath(); g.arc(x,y,r,0,7);
+    g.fillStyle = `rgba(${colors[i%4]},${a})`;
+    g.fill();
+  }
+  return c.toDataURL();
+}
+const starTile = makeStarTile();
+[
+  [$('starsFar'), 360],
+  [$('starsMid'), 260],
+  [$('starsNear'), 180]
+].forEach(([el, size])=>{
+  el.style.backgroundImage = `url(${starTile})`;
+  el.style.backgroundSize = `${size}px ${size}px`;
+});
+
+/* ---------- VÍDEO DE FUNDO ---------- */
+(function initVideo(){
+  const v = $('videoBg');
+  if(!VIDEO_SRC){ v.style.display = 'none'; return; }
+  v.src = VIDEO_SRC;
+  v.addEventListener('error', ()=>{ v.style.display = 'none'; });
+  const p = v.play();
+  if(p && p.catch) p.catch(()=>{ v.style.display = 'none'; });
+})();
+
+/* ---------- VÍDEO DA TELA DE ABERTURA ---------- */
+(function initIntroVideo(){
+  const v = $('videoIntro');
+  if(!VIDEO_INTRO_SRC){ v.remove(); return; }
+  v.src = VIDEO_INTRO_SRC;
+  v.addEventListener('error', ()=>{ v.remove(); });
+  const p = v.play();
+  if(p && p.catch) p.catch(()=>{});
+})();
+function pauseIntroVideo(){
+  const v = $('videoIntro');
+  if(v && !v.paused) v.pause();
+}
+function resumeIntroVideo(){
+  const v = $('videoIntro');
+  if(v && v.paused && v.getAttribute('src')) v.play().catch(()=>{});
+}
+
+/* ---------- PARALLAX DURANTE VIAGEM ---------- */
+const layers = { far:$('starsFar'), mid:$('starsMid'), near:$('starsNear') };
+function setParallax(active){
+  if(!active){
+    layers.far.style.transform='translate(0,0)'; layers.mid.style.transform='translate(0,0)'; layers.near.style.transform='translate(0,0)';
+    return;
+  }
+  const p = nodes[state.idx]||nodes[0];
+  const dx = ((p.x - CENTER)/CENTER);
+  const dy = ((p.y - CENTER)/CENTER);
+  const m = sZoom/sBase;
+  layers.far.style.transform  = `translate(${-dx*40*m}px, ${-dy*40*m}px)`;
+  layers.mid.style.transform  = `translate(${-dx*90*m}px, ${-dy*90*m}px)`;
+  layers.near.style.transform = `translate(${-dx*160*m}px, ${-dy*160*m}px)`;
+}
+const travelObserver = new MutationObserver(()=>{
+  setParallax(body.classList.contains('is-travelling'));
+});
+travelObserver.observe(body,{attributes:true,attributeFilter:['class']});
+
+/* ---------- BOOT ---------- */
+resize();
+schedule(()=>{ $('loader').classList.add('hide'); if(state.phase==='boot') state.phase='title'; }, 1400);
+</script>
+</body>
+</html>
